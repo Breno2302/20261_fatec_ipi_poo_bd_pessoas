@@ -1,3 +1,4 @@
+// nome do arquivo que faz a conexao entre bd e programa é Driver.
 import java.sql.Connection;
 import java.sql.DriverManager;
 public class ConnectionFactory {
