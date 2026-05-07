@@ -25,7 +25,7 @@ public class PessoaDA0 {
         conexao.close();
     }
 
-    public List <Pessoa> listar() throws Exception{
+    public static List <Pessoa> listar() throws Exception{
         //1. Construir uma lista de pessoas
         List<Pessoa> pessoas = new ArrayList<>();
         //2. Definir o comando  SQL
@@ -41,13 +41,46 @@ public class PessoaDA0 {
             ResultSet rs = ps.executeQuery();
         ){
             //7. Tratar o resultado
-            rs.next();
-            var codigo = rs.getInt("cod_pessoa");
-            var nome = rs.getString("nome");
-            var fone = rs.getString("fone");
-            var email = rs.getString("email");
-            var pessoa = Pessoa.builder().codigo(codigo).nome(nome).fone(fone).email(email).build();
-            pessoas.add(pessoa);
+            while(rs.next()){
+                var codigo = rs.getInt("cod_pessoa");
+                var nome = rs.getString("nome");
+                var fone = rs.getString("fone");
+                var email = rs.getString("email");
+                var p = Pessoa.builder().codigo(codigo).nome(nome).fone(fone).email(email).build();
+                pessoas.add(p);
+            }
+            return pessoas;
         }
     }
+
+    public void atualizar(Pessoa p) throws Exception {
+        //1.definir comando sql
+        var sql = "UPDATE tb_pessoa SET nome=?, fone=?, email=? WHERE cod_pessoa=?";
+        //2.Estabelecer conexão com o banco.
+        Connection conexao = ConnectionFactory.obterConexao();
+        //3.Preparar o comando
+        PreparedStatement ps = conexao.prepareStatement(sql);
+        //4.Substituir eventuais placeholders
+        ps.setString(1, p.getNome());
+        ps.setString(2, p.getFone());
+        ps.setString(3, p.getEmail());
+        ps.setInt(4, p.getCodigo());
+        //5.Executar o comando
+        ps.executeUpdate();
+        //6.Fechar os recursos
+        ps.close();
+        conexao.close();
+    }
+
+    public void apagar(Pessoa p) throws Exception {
+        var sql = "DELETE FROM tb_pessoa WHERE cod_pessoa=?";
+        try(
+        var conexao = ConnectionFactory.obterConexao();
+        PreparedStatement ps = conexao.prepareStatement(sql);
+        ){
+        ps.setInt(1, p.getCodigo());
+        ps.executeUpdate();
+        }
+    }
+
 }

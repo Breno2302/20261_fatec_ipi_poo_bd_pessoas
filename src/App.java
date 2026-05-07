@@ -1,3 +1,4 @@
+import java.util.List;
 import javax.swing.JOptionPane;
 public class App {
     public static void main(String[] args){
@@ -22,8 +23,33 @@ public class App {
                         break;
                     }
                     case 2:{
-                        
+                        List <Pessoa> pessoas = PessoaDA0.listar();
+                        // for it ou enhanced for
+                        var sb = new StringBuilder("");
+                        for(Pessoa pessoa : pessoas){
+                            System.out.println(pessoa);
+                            sb.append(pessoa).append("\n");
+                        }
+                        JOptionPane.showMessageDialog(null, sb.toString());
                         break;
+                    }
+                    case 3:{
+                        var codigo = Integer.parseInt(JOptionPane.showInputDialog("Codigo?"));
+                        var nome = JOptionPane.showInputDialog("Nome?");
+                        var fone = JOptionPane.showInputDialog("Fone?");
+                        var email = JOptionPane.showInputDialog("Email?");
+                        var p = Pessoa.builder().codigo(codigo).nome(nome).fone(fone).email(email).build();
+                        var dao = new PessoaDA0();
+                        dao.atualizar(p);
+                        JOptionPane.showMessageDialog(null, "Atualização OK!");
+                        break;
+                    }
+                    case 4:{
+                        var codigo = Integer.parseInt(JOptionPane.showInputDialog("Codigo?"));
+                        var p = Pessoa.builder().codigo(codigo).build();
+                        var dao = new PessoaDA0();
+                        dao.apagar(p);
+                        JOptionPane.showMessageDialog(null, "Exclusão OK!"); 
                     }
                 }
             }
